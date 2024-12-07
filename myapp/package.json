@@ -1,0 +1,15 @@
+{
+  "name": "expressapp",
+  "version": "1.0.0",
+  "description": " Module 5-lab exercise 1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rikki Gaddy",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
