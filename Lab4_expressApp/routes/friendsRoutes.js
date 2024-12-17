@@ -15,17 +15,23 @@ const friends = require('../models/friends')
 // default endpoint, gets all friends
 router.get('/', (req, res) => {
     res.json(friends)
-})
+});
 
 // filter endpoint, gets friends matching the gender from 'gender' query parameter ie. /friends/filter?gender=male
 // 1. Add support to also filter by a starting 'letter' query parameter ie. /friends/filter?letter=R
 router.get('/filter', (req, res) => {
     console.log(req.query)
     let filterGender = req.query.gender;
+    let startLetter = req.query.letter;
     let matchingFriends = [...friends];
+    
 
     if (filterGender) {
         matchingFriends = matchingFriends.filter(friend => friend.gender == filterGender);
+    }
+
+    if (startLetter) {
+        matchingFriends = matchingFriends.filter(friend => friend.name.toUpperCase() === filterstartLetter.toUpperCase());
     }
     
     if (matchingFriends.length > 0) {
@@ -33,28 +39,39 @@ router.get('/filter', (req, res) => {
         res.status(200).json(matchingFriends)
     } else {
         // and an error response when there are no matches
-        res.status(404).json({error: "No friends matching gender "+filterGender})
-    }  
-})
+        res.status(404).json({ error: "No friends matching gender " + filterGender })
+    }
+});
 
 // 2. Get information about this request from the headers
 router.get('/info', (req, res) => {
     console.log(req.headers)
 
+    const userAgent = req.headers['user-agent'];
+    const contentType = req.headers['content-type'];
+    const accept = req.headers['accept'];
+
     // Modify this response to just return info on the user-agent, content-type and accept headers
-    res.json(req.headers)  
-})
+    res.json({
+        'user-agent': userAgent,
+        'content-type': contentType,
+        'accept': accept,
+    });
+});
 
 // 3. Dynamic request param endpoint - get the friend matching the specific ID ie. /friends/3
 router.get('/:id', (req, res) => {
     console.log(req.params)
     let friendId = req.params.id; // 'id' here will be a value matching anything after the / in the request path
-
     // Modify this function to find and return the friend matching the given ID, or a 404 if not found
-
+    const matchFriend = friends.find(friend => friend.id === friendId);
     // Modify this response with the matched friend, or a 404 if not found
-    res.json({result: 'Finding friend with ID ' + friendId})
-})
+    if (matchFriend) {
+        res.status(200).json(matchFriend);
+    } else {
+        res.status(404).json({ error: `No friend found with ID ${friendId}` });
+    }
+});
 
 // a POST request with data sent in the body of the request, representing a new friend to add to our list
 router.post('/', (req, res) => {
@@ -63,7 +80,7 @@ router.post('/', (req, res) => {
 
     // we can add some validation here to make sure the new friend object matches the right pattern
     if (!newFriend.name || !newFriend.gender) {
-        res.status(500).json({error: 'Friend object must contain a name and gender'});
+        res.status(400).json({ error: 'Friend object must contain a name and gender' });
         return;
     }
     else if (!newFriend.id) {
@@ -73,7 +90,7 @@ router.post('/', (req, res) => {
     // if the new friend is valid, add them to the list and return the successfully added object
     friends.push(newFriend)
     res.status(200).json(newFriend)
-})
+});
 
 // 4. Complete this new route for a PUT request which will update data for an existing friend
 router.put('/:id', (req, res) => {
@@ -81,9 +98,17 @@ router.put('/:id', (req, res) => {
     let updatedFriend = req.body;
 
     // Replace the old friend data for friendId with the new data from updatedFriend
-
-    // Modify this response with the updated friend, or a 404 if not found
-    res.json({result: 'Updated friend with ID ' + friendId, data: updatedFriend})
-})
+    const foundFriend = friends.findIndex(friend => friend.id === friendId);
+    if (foundFriend) {
+        friends[foundFriend].gender = updatedFriend
+        friends[foundFriend].name = updatedFriend
+        // Modify this response with the updated friend, or a 404 if not found
+        res.status(200).json({
+            result: 'Updated friend with ID ' + friendId, data: updatedFriend,
+        });
+    } else {
+        res.status(404).json({ result: `No friend found with ID ${friendId}` });
+    }
+});
 
 module.exports = router;
