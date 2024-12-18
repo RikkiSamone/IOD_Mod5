@@ -1,21 +1,9 @@
-const express = require('express')
-const app = express()
+
+const app = require('./app');
 const port = 3000
 
-// import all calculator routes (up the top)
-const calculatorRoutes =
-require('./routes/calculatorRoutes');
-
-
-app.get('/', (req, res) => {
-res.send('Hello World!')
-})
-
+// start the app to listen on the right port
 app.listen(port, () => {
-console.log(`Example app listening
-at http://localhost:${port}`)
+  console.log(`Example app listening at
+http://localhost:${port}`)
 })
-
-
-// map the calculator routes to our app
-app.use('/calculator', calculatorRoutes);
