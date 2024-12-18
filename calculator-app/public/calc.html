@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Example</title>
+    <link rel="stylesheet" href="calculator.css">
+</head>
+
+<body>
+    <h1>Calculator</h1>
+
+    <form id="calculator">
+        <div class="first-number">
+            <h3>Enter your First Number</h3>
+            <input type="number" id="num1" name="num1">
+        </div>
+
+        <div id="operators">
+            <h4>Select Your Operator</h4>
+            <div class="operators">
+                <button type="button" class="button" id="add">+</button>
+                <button type="button" class="button" id="subtract">-</button>
+                <button type="button" class="button" id="multiply">×</button>
+                <button type="button" class="button" id="divide">÷</button>
+            </div>
+        </div>
+
+        <div class="second-number">
+            <h3>Enter your Second Number</h3>
+            <input type="number" id="num2" name="num2">
+        </div>
+
+        <div id="get-results">
+            <button type="button" class="button-clear" id="clear">Clear</button>
+        </div>
+
+        <div>
+            <h3>Result</h3>
+            <input type="text" id="result" name="result" readonly>
+        </div>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
